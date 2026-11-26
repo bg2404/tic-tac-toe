@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <random>
+#include <string_view>
 #include <vector>
 
 #include "tictactoe/board.hpp"
@@ -14,6 +15,15 @@ enum class Difficulty : std::uint8_t {
     Medium,  // Wins if it can, otherwise blocks, otherwise random.
     Hard,    // Perfect play (minimax); never loses.
 };
+
+[[nodiscard]] constexpr std::string_view difficultyName(Difficulty difficulty) noexcept {
+    switch (difficulty) {
+        case Difficulty::Easy: return "Easy";
+        case Difficulty::Medium: return "Medium";
+        case Difficulty::Hard: return "Hard";
+    }
+    return "?";
+}
 
 // Cells where placing `self` completes a line immediately.
 [[nodiscard]] std::vector<std::size_t> winningMoves(const Board& board, Mark self);

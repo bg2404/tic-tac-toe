@@ -18,7 +18,7 @@ endif()
 add_library(tictactoe_options INTERFACE)
 target_compile_features(tictactoe_options INTERFACE cxx_std_20)
 if(MSVC)
-    target_compile_options(tictactoe_options INTERFACE /W4 /permissive-
+    target_compile_options(tictactoe_options INTERFACE /W4 /permissive- /utf-8
         $<$<BOOL:${TICTACTOE_WARNINGS_AS_ERRORS}>:/WX>)
 else()
     target_compile_options(tictactoe_options INTERFACE
@@ -29,7 +29,9 @@ endif()
 add_library(tictactoe_core
     src/tictactoe/board.cpp
     src/tictactoe/ai.cpp
-    src/tictactoe/game.cpp)
+    src/tictactoe/game.cpp
+    src/tictactoe/terminal.cpp
+    src/tictactoe/tui.cpp)
 target_include_directories(tictactoe_core PUBLIC src)
 target_link_libraries(tictactoe_core PUBLIC tictactoe_options)
 

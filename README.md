@@ -143,8 +143,9 @@ ever changes:
 ## Terminal version (C++)
 
 [`terminal/`](terminal/) is a portable C++20 rewrite of the legacy game for
-macOS, Linux and Windows terminals, with Easy / Medium / Hard (perfect-play
-minimax) AI. It is a
+macOS, Linux and Windows terminals: full-screen keyboard UI (arrow keys,
+colours, winning-line highlight, running score), Easy / Medium / Hard
+(perfect-play minimax) AI, and a plain line mode for pipes. It is a
 standalone CMake project with its own tests and CI workflow
 (`.github/workflows/terminal.yml`), and is not part of the web build.
 
@@ -154,7 +155,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
 ./build/tictactoe
 ```
 
-See [`terminal/README.md`](terminal/README.md) for details.
+See [`terminal/README.md`](terminal/README.md) for controls and options.
 
 ## Legacy Turbo C++ version
 

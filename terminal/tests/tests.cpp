@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <random>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -12,6 +13,8 @@
 #include "tictactoe/ai.hpp"
 #include "tictactoe/board.hpp"
 #include "tictactoe/game.hpp"
+#include "tictactoe/terminal.hpp"
+#include "tictactoe/tui.hpp"
 
 namespace {
 
@@ -159,6 +162,117 @@ void testSessionEndOfInput() {
     CHECK(out.str().find("Goodbye.") != std::string::npos);
 }
 
+// ---- terminal / TUI ----
+
+using ttt::term::Key;
+using ttt::term::KeyType;
+
+std::string stripAnsi(const std::string& s) {
+    static const std::regex kEscape("\x1b\\[[0-9;?]*[A-Za-z]");
+    return std::regex_replace(s, kEscape, "");
+}
+
+// Text of the last frame drawn by the TUI, without escape codes.
+std::string lastFrame(const std::string& output) {
+    const auto pos = output.rfind("\x1b[H");
+    return stripAnsi(pos == std::string::npos ? output : output.substr(pos));
+}
+
+ttt::Tui::KeyReader scripted(std::vector<Key> keys) {
+    return [keys = std::move(keys), i = std::size_t{0}]() mutable {
+        return i < keys.size() ? keys[i++] : Key{KeyType::Eof};
+    };
+}
+
+Key ch(char c) { return {KeyType::Char, c}; }
+
+void testParseKey() {
+    using ttt::term::parseKey;
+    CHECK(parseKey("\x1b[A") == Key{KeyType::Up});
+    CHECK(parseKey("\x1bOB") == Key{KeyType::Down});
+    CHECK(parseKey("\x1b[C") == Key{KeyType::Right});
+    CHECK(parseKey("\x1b[D") == Key{KeyType::Left});
+    CHECK(parseKey("\x1b") == Key{KeyType::Escape});
+    CHECK(parseKey("\r") == Key{KeyType::Enter});
+    CHECK(parseKey("\n") == Key{KeyType::Enter});
+    CHECK(parseKey(" ") == Key{KeyType::Space});
+    CHECK(parseKey("\x03") == Key{KeyType::Interrupt});
+    CHECK(parseKey("q") == ch('q'));
+    CHECK(parseKey("\x1b[5~") == Key{KeyType::None});
+    CHECK(parseKey("") == Key{KeyType::None});
+}
+
+void testWinningLine() {
+    CHECK((boardFrom("X..OX.O.X").winningLine() == Board::Line{0, 4, 8}));
+    CHECK(!boardFrom("XO.......").winningLine().has_value());
+}
+
+void testRenderGameLayout() {
+    ttt::GameView view;
+    view.board = boardFrom("X...O....");
+    view.showCursor = false;
+    const std::string text = stripAnsi(ttt::renderGame(view, false));
+    CHECK(text.find("   X   │   2   │   3   ") != std::string::npos);
+    CHECK(text.find("   4   │   O   │   6   ") != std::string::npos);
+    CHECK(text.find("───────┼───────┼───────") != std::string::npos);
+    CHECK(text.find("Computer  0") != std::string::npos);
+}
+
+void testRenderColorToggle() {
+    ttt::GameView view;
+    view.board = boardFrom("X........");
+    CHECK(ttt::renderGame(view, true).find("\x1b[1;96m") != std::string::npos);
+    CHECK(ttt::renderGame(view, false).find("96") == std::string::npos);
+}
+
+void testRenderMenu() {
+    ttt::MenuView view;
+    view.config = {.difficulty = Difficulty::Hard, .human = Mark::O};
+    const std::string text = stripAnsi(ttt::renderMenu(view, false));
+    CHECK(text.find("‹ Hard ›") != std::string::npos);
+    CHECK(text.find("O  (moves second)") != std::string::npos);
+    CHECK(text.find("Perfect play") != std::string::npos);
+}
+
+void testTuiCursorPlacement() {
+    // Menu: Left (Medium -> Easy), Enter. Game: Up (5 -> 2), Enter, quit.
+    std::ostringstream out;
+    ttt::Tui tui(
+        scripted({{KeyType::Left}, {KeyType::Enter}, {KeyType::Up}, {KeyType::Enter}, ch('q')}),
+        out, std::mt19937(3), {.color = false, .computerDelay = {}});
+    tui.run();
+    const std::string frame = lastFrame(out.str());
+    CHECK(frame.find("Level     Easy") != std::string::npos);
+    CHECK(frame.find("│   X   │") != std::string::npos);
+    CHECK(frame.find("Computer played") != std::string::npos);
+}
+
+void testTuiTakenCellNotice() {
+    std::ostringstream out;
+    ttt::Tui tui(scripted({{KeyType::Enter}, ch('5'), ch('5')}), out, std::mt19937(1),
+                 {.color = false, .computerDelay = {}});
+    tui.run();
+    CHECK(lastFrame(out.str()).find("Cell 5 is taken.") != std::string::npos);
+}
+
+void testTuiFullGameUpdatesScore() {
+    // Hard, play as O, then try every cell twice; then back to menu and quit.
+    std::vector<Key> keys{{KeyType::Right}, {KeyType::Down}, {KeyType::Right}, {KeyType::Enter}};
+    for (int pass = 0; pass < 2; ++pass) {
+        for (char c = '1'; c <= '9'; ++c) keys.push_back(ch(c));
+    }
+    keys.push_back({KeyType::Escape});
+    keys.push_back(ch('q'));
+    std::ostringstream out;
+    ttt::Tui tui(scripted(std::move(keys)), out, std::mt19937(5),
+                 {.color = false, .computerDelay = {}});
+    tui.run();
+    const ttt::Score& s = tui.score();
+    CHECK(s.wins == 0);
+    CHECK(s.losses + s.draws == 1);
+    CHECK(lastFrame(out.str()).find("Score  You 0") != std::string::npos);
+}
+
 }  // namespace
 
 int main() {
@@ -175,6 +289,14 @@ int main() {
         {"session full game", testSessionFullGame},
         {"session invalid input and quit", testSessionInvalidInputAndQuit},
         {"session end of input", testSessionEndOfInput},
+        {"parse key", testParseKey},
+        {"winning line", testWinningLine},
+        {"render game layout", testRenderGameLayout},
+        {"render color toggle", testRenderColorToggle},
+        {"render menu", testRenderMenu},
+        {"tui cursor placement", testTuiCursorPlacement},
+        {"tui taken cell notice", testTuiTakenCellNotice},
+        {"tui full game updates score", testTuiFullGameUpdatesScore},
     };
 
     for (const auto& [name, fn] : tests) {

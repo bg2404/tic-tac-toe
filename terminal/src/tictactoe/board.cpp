@@ -12,11 +12,19 @@ bool Board::place(std::size_t cell, Mark mark) {
     return true;
 }
 
-std::optional<Mark> Board::winner() const {
-    for (const auto& [a, b, c] : kLines) {
+std::optional<Board::Line> Board::winningLine() const {
+    for (const auto& line : kLines) {
+        const auto [a, b, c] = line;
         if (cells_[a] != Mark::Empty && cells_[a] == cells_[b] && cells_[b] == cells_[c]) {
-            return cells_[a];
+            return line;
         }
+    }
+    return std::nullopt;
+}
+
+std::optional<Mark> Board::winner() const {
+    if (const auto line = winningLine()) {
+        return cells_[(*line)[0]];
     }
     return std::nullopt;
 }

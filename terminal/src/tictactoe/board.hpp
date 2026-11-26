@@ -55,6 +55,8 @@ public:
     void clear(std::size_t cell) { cells_.at(cell) = Mark::Empty; }
 
     [[nodiscard]] std::optional<Mark> winner() const;
+    // The completed line, if any.
+    [[nodiscard]] std::optional<Line> winningLine() const;
     [[nodiscard]] bool isFull() const;
     [[nodiscard]] Outcome outcome() const;
     [[nodiscard]] std::vector<std::size_t> emptyCells() const;

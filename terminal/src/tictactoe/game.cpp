@@ -38,15 +38,6 @@ std::optional<int> parseInt(std::string_view s) {
     return value;
 }
 
-constexpr std::string_view difficultyName(Difficulty d) {
-    switch (d) {
-        case Difficulty::Easy: return "Easy";
-        case Difficulty::Medium: return "Medium";
-        case Difficulty::Hard: return "Hard";
-    }
-    return "?";
-}
-
 }  // namespace
 
 std::string render(const Board& board) {
