@@ -117,14 +117,17 @@ Live at **[bhaskergoel.com/tic-tac-toe](https://bhaskergoel.com/tic-tac-toe)**, 
 its own Vercel project (`infinite-tic-tac-toe`) and proxied in from the main
 site via a rewrite in that site's `vercel.json`.
 
-The Vercel project is still named `infinite-tic-tac-toe`, and the repository
-directory still uses the old name too. Both are deliberate: the main site's
-rewrite points at this project's deployment URL, which derives from the project
-name, so renaming it there would break the proxy until the other repo is
-updated in step. Only the app's display name changed.
+The Vercel project is still named `infinite-tic-tac-toe`. This is deliberate:
+the main site's rewrite points at this project's deployment URL, which derives
+from the project name, so renaming it would break the proxy until the other
+repo is updated in step. Only the app's display name changed.
 
-Pushing to `main` deploys automatically. To deploy by hand:
-`npx vercel --prod`.
+The app was developed in `bg2404/infinite-tic-tac-toe` and moved into this
+repository (`bg2404/tic-tac-toe`) with its full history. Pull request numbers
+in older merge commits (`Merge pull request #N …`) refer to that repository.
+The Vercel project's Git connection must point at this repository, with
+`master` as its production branch; pushing to `master` then deploys
+automatically. To deploy by hand: `npx vercel --prod`.
 
 Two details make the subpath work, and both must stay in sync if the path
 ever changes:
@@ -140,9 +143,8 @@ ever changes:
 [`legacy/turbo-cpp/`](legacy/turbo-cpp/) holds the project's predecessor: a
 single-file command-line game ([`TICTACTOE.CPP`](legacy/turbo-cpp/TICTACTOE.CPP))
 written in Turbo C++ for 16-bit DOS, with Easy / Medium / Difficult AI and a
-choice of playing first or second. It was imported from the former
-`bg2404/tic-tac-toe` repository with its commit history intact
-(`git log c52bd98` shows it).
+choice of playing first or second. It is this repository's original content;
+its commits are the first five in the history (`git log c52bd98` shows them).
 
 It is kept for reference only. It depends on `conio.h`, `graphics.h`,
 `bios.h` and the BGI driver, so it builds only with Turbo C++ (or in DOSBox)
