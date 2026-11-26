@@ -42,6 +42,6 @@ yarn-error.*
 /android
 .vercel
 
-# C++ terminal version build output
-/terminal/build*/
-/terminal/compile_commands.json
+# Legacy C++ build output
+/legacy/turbo-cpp/build*/
+/legacy/turbo-cpp/compile_commands.json

@@ -1,18 +1,18 @@
-name: Terminal (C++)
+name: Legacy C++
 
 on:
   push:
     branches: [master, main]
-    paths: ["terminal/**", ".github/workflows/terminal.yml"]
+    paths: ["legacy/turbo-cpp/**", ".github/workflows/legacy-cpp.yml"]
   pull_request:
-    paths: ["terminal/**", ".github/workflows/terminal.yml"]
+    paths: ["legacy/turbo-cpp/**", ".github/workflows/legacy-cpp.yml"]
 
 permissions:
   contents: read
 
 defaults:
   run:
-    working-directory: terminal
+    working-directory: legacy/turbo-cpp
 
 jobs:
   build:

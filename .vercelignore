@@ -13,9 +13,6 @@ web-build
 # Legacy Turbo C++ source — reference only, not built.
 legacy
 
-# C++ terminal version — separate CMake project, not part of the web build.
-terminal
-
 # Local tooling
 scripts/engine.test.ts
 .DS_Store

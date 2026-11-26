@@ -49,8 +49,6 @@ scripts/
                    structural invariants (forest-at-rest, unique subscripts, …)
 study/
   an exact solve of Infinite mode — see below
-terminal/
-  portable C++20 terminal version — see below
 legacy/turbo-cpp/
   the original Turbo C++ version — see below
 ```
@@ -140,23 +138,6 @@ ever changes:
   directory at the domain root, so nesting it makes the served path match
   `baseUrl`. Without this the bundle 404s.
 
-## Terminal version (C++)
-
-[`terminal/`](terminal/) is a portable C++20 rewrite of the legacy game for
-macOS, Linux and Windows terminals: full-screen keyboard UI (arrow keys,
-colours, winning-line highlight, running score), Easy / Medium / Hard
-(perfect-play minimax) AI, and a plain line mode for pipes. It is a
-standalone CMake project with its own tests and CI workflow
-(`.github/workflows/terminal.yml`), and is not part of the web build.
-
-```sh
-cd terminal
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
-./build/tictactoe
-```
-
-See [`terminal/README.md`](terminal/README.md) for controls and options.
-
 ## Legacy Turbo C++ version
 
 [`legacy/turbo-cpp/`](legacy/turbo-cpp/) holds the project's predecessor: a
@@ -168,6 +149,11 @@ its commits are the first five in the history (`git log c52bd98` shows them).
 It is kept for reference only. It depends on `conio.h`, `graphics.h`,
 `bios.h` and the BGI driver, so it builds only with Turbo C++ (or in DOSBox)
 and is not part of the web build.
+
+The same directory also holds a portable C++20 rewrite of that game for
+macOS, Linux and Windows terminals (CMake project with its own tests and CI
+workflow, `.github/workflows/legacy-cpp.yml`); see
+[`legacy/turbo-cpp/README.md`](legacy/turbo-cpp/README.md).
 
 ## Install as a web app (PWA)
 
