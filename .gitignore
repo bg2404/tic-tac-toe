@@ -41,3 +41,7 @@ yarn-error.*
 /ios
 /android
 .vercel
+
+# C++ terminal version build output
+/terminal/build*/
+/terminal/compile_commands.json

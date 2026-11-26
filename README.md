@@ -49,6 +49,8 @@ scripts/
                    structural invariants (forest-at-rest, unique subscripts, …)
 study/
   an exact solve of Infinite mode — see below
+terminal/
+  portable C++20 terminal version — see below
 legacy/turbo-cpp/
   the original Turbo C++ version — see below
 ```
@@ -137,6 +139,22 @@ ever changes:
 - `build:web` exports to `dist/tic-tac-toe/` — Vercel serves the output
   directory at the domain root, so nesting it makes the served path match
   `baseUrl`. Without this the bundle 404s.
+
+## Terminal version (C++)
+
+[`terminal/`](terminal/) is a portable C++20 rewrite of the legacy game for
+macOS, Linux and Windows terminals, with Easy / Medium / Hard (perfect-play
+minimax) AI. It is a
+standalone CMake project with its own tests and CI workflow
+(`.github/workflows/terminal.yml`), and is not part of the web build.
+
+```sh
+cd terminal
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
+./build/tictactoe
+```
+
+See [`terminal/README.md`](terminal/README.md) for details.
 
 ## Legacy Turbo C++ version
 
