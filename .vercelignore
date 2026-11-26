@@ -10,6 +10,9 @@ dist
 .expo
 web-build
 
+# Legacy Turbo C++ source — reference only, not built.
+legacy
+
 # Local tooling
 scripts/engine.test.ts
 .DS_Store

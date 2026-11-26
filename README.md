@@ -49,6 +49,8 @@ scripts/
                    structural invariants (forest-at-rest, unique subscripts, …)
 study/
   an exact solve of Infinite mode — see below
+legacy/turbo-cpp/
+  the original Turbo C++ version — see below
 ```
 
 Classic/Infinite and Quantum share the theme, board chrome, and history
@@ -132,6 +134,19 @@ ever changes:
 - `build:web` exports to `dist/tic-tac-toe/` — Vercel serves the output
   directory at the domain root, so nesting it makes the served path match
   `baseUrl`. Without this the bundle 404s.
+
+## Legacy Turbo C++ version
+
+[`legacy/turbo-cpp/`](legacy/turbo-cpp/) holds the project's predecessor: a
+single-file command-line game ([`TICTACTOE.CPP`](legacy/turbo-cpp/TICTACTOE.CPP))
+written in Turbo C++ for 16-bit DOS, with Easy / Medium / Difficult AI and a
+choice of playing first or second. It was imported from the former
+`bg2404/tic-tac-toe` repository with its commit history intact
+(`git log c52bd98` shows it).
+
+It is kept for reference only. It depends on `conio.h`, `graphics.h`,
+`bios.h` and the BGI driver, so it builds only with Turbo C++ (or in DOSBox)
+and is not part of the web build.
 
 ## Install as a web app (PWA)
 
