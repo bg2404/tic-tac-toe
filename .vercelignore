@@ -10,11 +10,8 @@ dist
 .expo
 web-build
 
-# Legacy Turbo C++ source — reference only, not built.
+# Legacy C++ versions — not part of the web build.
 legacy
-
-# C++ terminal version — separate CMake project, not part of the web build.
-terminal
 
 # Local tooling
 scripts/engine.test.ts
