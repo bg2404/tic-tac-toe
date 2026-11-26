@@ -1,0 +1,69 @@
+name: Terminal (C++)
+
+on:
+  push:
+    branches: [master, main]
+    paths: ["terminal/**", ".github/workflows/terminal.yml"]
+  pull_request:
+    paths: ["terminal/**", ".github/workflows/terminal.yml"]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: terminal
+
+jobs:
+  build:
+    name: ${{ matrix.os }} / ${{ matrix.compiler }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: gcc
+            cxx: g++
+          - os: ubuntu-latest
+            compiler: clang
+            cxx: clang++
+          - os: macos-latest
+            compiler: clang
+            cxx: clang++
+          - os: windows-latest
+            compiler: msvc
+            cxx: cl
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        env:
+          CXX: ${{ matrix.cxx }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTICTACTOE_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Test
+        run: ctest --test-dir build --build-config Release --output-on-failure
+
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTICTACTOE_WARNINGS_AS_ERRORS=ON
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=all"
+      - name: Build
+        run: cmake --build build
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check formatting
+        run: clang-format --dry-run --Werror src/main.cpp src/tictactoe/* tests/*.cpp
