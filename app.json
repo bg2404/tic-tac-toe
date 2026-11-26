@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Tic Tac Toe",
+    "slug": "tic-tac-toe",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "experiments": {
+      "baseUrl": "/tic-tac-toe"
+    }
+  }
+}
