@@ -10,7 +10,7 @@ dist
 .expo
 web-build
 
-# Legacy Turbo C++ source — reference only, not built.
+# Legacy C++ versions — not part of the web build.
 legacy
 
 # Local tooling

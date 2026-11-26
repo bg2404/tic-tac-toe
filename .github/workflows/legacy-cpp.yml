@@ -3,16 +3,16 @@ name: Legacy C++
 on:
   push:
     branches: [master, main]
-    paths: ["legacy/turbo-cpp/**", ".github/workflows/legacy-cpp.yml"]
+    paths: ["legacy/cpp/**", ".github/workflows/legacy-cpp.yml"]
   pull_request:
-    paths: ["legacy/turbo-cpp/**", ".github/workflows/legacy-cpp.yml"]
+    paths: ["legacy/cpp/**", ".github/workflows/legacy-cpp.yml"]
 
 permissions:
   contents: read
 
 defaults:
   run:
-    working-directory: legacy/turbo-cpp
+    working-directory: legacy/cpp
 
 jobs:
   build:

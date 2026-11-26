@@ -43,5 +43,5 @@ yarn-error.*
 .vercel
 
 # Legacy C++ build output
-/legacy/turbo-cpp/build*/
-/legacy/turbo-cpp/compile_commands.json
+/legacy/cpp/build*/
+/legacy/cpp/compile_commands.json

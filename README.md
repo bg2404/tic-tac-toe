@@ -49,8 +49,8 @@ scripts/
                    structural invariants (forest-at-rest, unique subscripts, …)
 study/
   an exact solve of Infinite mode — see below
-legacy/turbo-cpp/
-  the original Turbo C++ version — see below
+legacy/cpp/
+  the original C++ command-line game and its C++20 rewrite — see below
 ```
 
 Classic/Infinite and Quantum share the theme, board chrome, and history
@@ -138,22 +138,25 @@ ever changes:
   directory at the domain root, so nesting it makes the served path match
   `baseUrl`. Without this the bundle 404s.
 
-## Legacy Turbo C++ version
+## Legacy C++ version
 
-[`legacy/turbo-cpp/`](legacy/turbo-cpp/) holds the project's predecessor: a
-single-file command-line game ([`TICTACTOE.CPP`](legacy/turbo-cpp/TICTACTOE.CPP))
-written in Turbo C++ for 16-bit DOS, with Easy / Medium / Difficult AI and a
-choice of playing first or second. It is this repository's original content;
-its commits are the first five in the history (`git log c52bd98` shows them).
+[`legacy/cpp/`](legacy/cpp/) holds the project's predecessor, a command-line
+game with Easy / Medium / Hard AI and a choice of playing first or second:
 
-It is kept for reference only. It depends on `conio.h`, `graphics.h`,
-`bios.h` and the BGI driver, so it builds only with Turbo C++ (or in DOSBox)
-and is not part of the web build.
+- [`TICTACTOE.CPP`](legacy/cpp/TICTACTOE.CPP) — the original single-file
+  program, written in Turbo C++ for 16-bit DOS. It is this repository's
+  original content; its commits are the first five in the history
+  (`git log c52bd98` shows them). It depends on `conio.h`, `graphics.h`,
+  `bios.h` and the BGI driver, so it builds only with Turbo C++ (or in
+  DOSBox), and is kept unchanged for reference.
+- A portable C++20 rewrite for macOS, Linux and Windows terminals, with a
+  full-screen keyboard interface: a CMake project with its own tests and CI
+  workflow (`.github/workflows/legacy-cpp.yml`).
 
-The same directory also holds a portable C++20 rewrite of that game for
-macOS, Linux and Windows terminals (CMake project with its own tests and CI
-workflow, `.github/workflows/legacy-cpp.yml`); see
-[`legacy/turbo-cpp/README.md`](legacy/turbo-cpp/README.md).
+![Terminal version of the C++ game](legacy/cpp/docs/screenshot.png)
+
+Neither is part of the web build. See
+[`legacy/cpp/README.md`](legacy/cpp/README.md) to build and play.
 
 ## Install as a web app (PWA)
 
